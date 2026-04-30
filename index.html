@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elegant Digital Invitation</title>
+    <!-- Premium Calligraphy Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 1. Name Input Landing Screen (Fades out when done) -->
+    <div id="name-overlay">
+        <div class="input-box">
+            <h2>Welcome</h2>
+            <p>Please enter your name to <br> view your invitation</p>
+            <input type="text" id="userName" placeholder="Type your name here..." autocomplete="off">
+            <button id="startBtn">Enter</button>
+        </div>
+    </div>
+
+    <!-- 2. The Envelope (Fades in after Name Entry) -->
+    <div class="envelope-wrapper" id="invitation" style="display: none; opacity: 0;">
+        
+        <!-- THE FLAP (Z-index 5) -->
+        <div class="flap">
+            <div class="flap-text">
+                You are Invited to<br>
+                Amor's Birthday Dinner
+                <div class="zip">05/08/26</div>
+            </div>
+            <!-- The Seal -->
+            <div class="wax-seal" id="seal"></div>
+        </div>
+
+        <!-- THE WIDE OVAL CARD (Hidden inside) -->
+        <div class="card">
+            <div class="invitation-content">
+                <!-- User's name injected here -->
+                <p class="greeting" id="displayGreeting"><strong>Dear [Name],</strong></p>
+                
+                <p class="message">
+                    I would be delighted if you <br> 
+                    could join us for dinner to <br>
+                    celebrate Amor's Birthday.
+                </p>
+
+                <div class="details">
+                    <p><strong>Venue:</strong> Sentro 1980</p>
+                    <p><strong>Day&Time:</strong> Friday | 6:30pm</p>
+                    <p><strong>Attire:</strong> Dress at your comfort</p>
+                </div>
+
+                <p class="closing">
+                    This will be a surprise dinner.<br>
+                    Please keep it a secret <br>
+                    until Amor arrives.
+                </p>
+            </div>
+        </div>
+
+        <!-- THE FRONT POCKET (The "Valley Dip" face) -->
+        <div class="pocket"></div>
+        
+        <div class="instruction">Tap the seal to open</div>
+    </div>
+
+    <script>
+        const overlay = document.getElementById('name-overlay');
+        const startBtn = document.getElementById('startBtn');
+        const nameInput = document.getElementById('userName');
+        const greetingDisplay = document.getElementById('displayGreeting');
+        const invitation = document.getElementById('invitation');
+        const seal = document.getElementById('seal');
+        const instruction = document.querySelector('.instruction');
+        
+        let isOpen = false;
+
+        // STEP 1: Handle Name Input and Landing Page Fade Out
+        startBtn.addEventListener('click', () => {
+            const name = nameInput.value.trim();
+            if (name !== "") {
+                // Update Greeting
+                greetingDisplay.innerText = `Dear ${name},`;
+                
+                // Add CSS class to start the fade-out
+                overlay.classList.add('fade-out');
+                
+                // Wait for the fade (1s) then show the envelope
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                    invitation.style.display = 'block';
+                    
+                    // Fade the envelope in smoothly
+                    setTimeout(() => {
+                        invitation.style.opacity = '1';
+                    }, 50);
+                }, 1000);
+            } else {
+                alert("Please enter your name to continue.");
+            }
+        });
+
+        // Allow 'Enter' key to submit name
+        nameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') startBtn.click();
+        });
+
+        // STEP 2: Handle Envelope Opening Animation
+        invitation.addEventListener('click', () => {
+            if (!isOpen) {
+                // Peel seal first
+                seal.classList.add('peeling');
+
+                // Small delay then hinge open
+                setTimeout(() => {
+                    invitation.classList.add('open-and-focus');
+                    instruction.innerText = "Tap to close";
+                }, 400); 
+
+                isOpen = true;
+            } else {
+                // Reset State
+                invitation.classList.remove('open-and-focus');
+                seal.classList.remove('peeling');
+                instruction.innerText = "Tap the seal to open";
+                isOpen = false;
+            }
+        });
+    </script>
+
+</body>
+</html>
